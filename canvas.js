@@ -1,4 +1,4 @@
-var canvas = document.querySelector("canvas");
+  var canvas = document.querySelector("canvas");
 
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
@@ -39,6 +39,17 @@ var c = canvas.getContext("2d");
 //   c.stroke();
 // }
 
+var mouse = {
+  x: undefined,
+  y: undefined
+}
+
+window.addEventListener('mousemove', function(event) {
+  mouse.x = event.x;
+  mouse.y = event.y;
+  console.log(mouse)
+})
+
 function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue) {
   this.x = x;
   this.y = y;
@@ -53,7 +64,7 @@ function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue) {
   this.dblue = dblue;
 
   this.draw = function () {
-    c.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
+    // c.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
     c.beginPath();
     c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
     c.strokeStyle = "blue";
@@ -85,6 +96,11 @@ function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue) {
 
     this.x += this.dx;
     this.y += this.dy;
+
+    // interactivity
+    if (mouse.x - this.x < 50 && mouse.x - this.x > -50) {
+      this.radius += 1;
+    }
 
     // Update colors
     this.red += this.dred;
