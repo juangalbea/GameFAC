@@ -39,7 +39,7 @@ var c = canvas.getContext("2d");
 //   c.stroke();
 // }
 
-function Circle(x, y, dx, dy, radius, red, green, blue, dred) {
+function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue) {
   this.x = x;
   this.y = y;
   this.dx = dx;
@@ -49,6 +49,8 @@ function Circle(x, y, dx, dy, radius, red, green, blue, dred) {
   this.green = green;
   this.blue = blue;
   this.dred = dred;
+  this.dgreen = dgreen;
+  this.dblue = dblue;
 
   this.draw = function () {
     c.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
@@ -68,15 +70,26 @@ function Circle(x, y, dx, dy, radius, red, green, blue, dred) {
       this.dy = -this.dy;
     }
 
+    // Toggle direction for red
     if (this.red > 255 || this.red < 0) {
       this.dred = -this.dred;
+    }
+    // Toggle direction for green
+    if (this.green > 255 || this.green < 0) {
+      this.dgreen = -this.dgreen;
+    }
+    // Toggle direction for blue
+    if (this.blue > 255 || this.blue < 0) {
+      this.dblue = -this.dblue;
     }
 
     this.x += this.dx;
     this.y += this.dy;
-    console.log("dred", dred);
+
+    // Update colors
     this.red += this.dred;
-    // console.log(red);
+    this.green += this.dgreen;
+    this.blue += this.dblue;
 
     this.draw();
   };
@@ -93,14 +106,14 @@ for (var i = 0; i < 100; i++) {
   var red = Math.random() * 255;
   var green = Math.random() * 255;
   var blue = Math.random() * 255;
-  var dred = 1;
+  var dred = 3;
+  var dgreen = -4; // Step for green
+  var dblue = 5; // Step for blue
 
-  circleArray.push(new Circle(x, y, dx, dy, radius, red, dred, green, blue));
+  circleArray.push(
+    new Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue)
+  );
 }
-
-console.log(circleArray);
-
-var circle = new Circle(200, 200, 3, 3, 30);
 
 function animate() {
   requestAnimationFrame(animate);
