@@ -134,10 +134,10 @@ var circleArray = [];
 function init() {
   circleArray = [];
   for (var i = 0; i < 10; i++) {
-    var radius = Math.random() * 3 + 1;
+    var radius = Math.random() * 4 + 1;
     var x = Math.random() * (innerWidth - radius * 2) + radius;
     var y = Math.random() * (innerHeight - radius * 2) + radius;
-    var dx = Math.random() - 0.5;
+    var dx = Math.random() - 0.2;
     var dy = Math.random() - 0.5;
     var red = Math.random() * 255;
     var green = Math.random() * 255;
