@@ -47,9 +47,9 @@ window.addEventListener("click", function () {
     var red = Math.random() * 255;
     var green = Math.random() * 255;
     var blue = Math.random() * 255;
-    var dred = 3;
-    var dgreen = -4; // Step for green
-    var dblue = 5; // Step for blue
+    var dred = 1.5;
+    var dgreen = -2; // Step for green
+    var dblue = 2.5; // Step for blue
 
     sendCircles.push(
       new Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue)
@@ -134,10 +134,10 @@ var circleArray = [];
 function init() {
   circleArray = [];
   for (var i = 0; i < 10; i++) {
-    var radius = Math.random() * 4 + 1;
+    var radius = Math.random() * 3 + 1;
     var x = Math.random() * (innerWidth - radius * 2) + radius;
     var y = Math.random() * (innerHeight - radius * 2) + radius;
-    var dx = Math.random() - 0.2;
+    var dx = Math.random() - 0.5;
     var dy = Math.random() - 0.5;
     var red = Math.random() * 255;
     var green = Math.random() * 255;
