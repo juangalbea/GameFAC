@@ -108,20 +108,6 @@ function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue) {
     this.x += this.dx;
     this.y += this.dy;
 
-    // interactivity
-    // if (
-    //   mouse.x - this.x < 50 &&
-    //   mouse.x - this.x > -50 &&
-    //   mouse.y - this.y < 50 &&
-    //   mouse.y - this.y > -50
-    // ) {
-    //   if (this.radius < maxRadius) {
-    //     this.radius += 1;
-    //   }
-    // } else if (this.radius > this.originalRadius) {
-    //   this.radius -= 1;
-    // }
-
     // Update colors
     this.red += this.dred;
     this.green += this.dgreen;
