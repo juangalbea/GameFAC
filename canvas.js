@@ -35,7 +35,7 @@ var sendCircles = [];
 window.addEventListener("click", function () {
   console.log("clicked", mouse.x);
 
-  for (var i = 0; i < 100; i++) {
+  for (var i = 0; i < 1; i++) {
     var radius = Math.random() * 3 + 10;
     var angle = Math.random() * Math.PI * 2;
     var distance = Math.random() * 50; // Adjust 50 for the desired spread radius
@@ -92,26 +92,26 @@ function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue) {
       this.dy = -this.dy;
     }
 
-    // Toggle direction for red
-    if (this.red > 255 || this.red < 0) {
-      this.dred = -this.dred;
-    }
-    // Toggle direction for green
-    if (this.green > 255 || this.green < 0) {
-      this.dgreen = -this.dgreen;
-    }
-    // Toggle direction for blue
-    if (this.blue > 255 || this.blue < 0) {
-      this.dblue = -this.dblue;
-    }
+    // // Toggle direction for red
+    // if (this.red > 255 || this.red < 0) {
+    //   this.dred = -this.dred;
+    // }
+    // // Toggle direction for green
+    // if (this.green > 255 || this.green < 0) {
+    //   this.dgreen = -this.dgreen;
+    // }
+    // // Toggle direction for blue
+    // if (this.blue > 255 || this.blue < 0) {
+    //   this.dblue = -this.dblue;
+    // }
 
     this.x += this.dx;
     this.y += this.dy;
 
-    // Update colors
-    this.red += this.dred;
-    this.green += this.dgreen;
-    this.blue += this.dblue;
+    // // Update colors
+    // this.red += this.dred;
+    // this.green += this.dgreen;
+    // this.blue += this.dblue;
 
     this.draw();
   };
@@ -119,8 +119,8 @@ function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue) {
 var circleArray = [];
 function init() {
   circleArray = [];
-  for (var i = 0; i < 10; i++) {
-    var radius = Math.random() * 3 + 1;
+  for (var i = 0; i < 4; i++) {
+    var radius = Math.random() * 3 + 10;
     var x = Math.random() * (innerWidth - radius * 2) + radius;
     var y = Math.random() * (innerHeight - radius * 2) + radius;
     var dx = Math.random() - 0.5;
