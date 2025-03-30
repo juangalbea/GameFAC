@@ -105,8 +105,8 @@ function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue) {
     //   this.dblue = -this.dblue;
     // }
 
-    this.x += this.dx;
-    this.y += this.dy;
+    this.x += this.dx * 4;
+    this.y += this.dy * 8;
 
     // // Update colors
     // this.red += this.dred;
