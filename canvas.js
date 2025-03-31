@@ -15,12 +15,10 @@ var minRadius = 10;
 
 var colorArray = ["#012030", "#13678A", "#45C4B0", "#9AEBA3", "#DAFDBA"];
 
-console.log();
-
 window.addEventListener("mousemove", function (event) {
   mouse.x = event.x;
   mouse.y = event.y;
-  console.log(mouse);
+  // console.log(mouse);
 });
 
 window.addEventListener("resize", function () {
@@ -33,9 +31,9 @@ window.addEventListener("resize", function () {
 var sendCircles = [];
 
 window.addEventListener("click", function () {
-  console.log("clicked", mouse.x);
+  // console.log("clicked", mouse.x);
 
-  for (var i = 0; i < 1; i++) {
+  for (var i = 0; i < 10; i++) {
     var radius = Math.random() * 3 + 10;
     var angle = Math.random() * Math.PI * 2;
     var distance = Math.random() * 50; // Adjust 50 for the desired spread radius
@@ -57,7 +55,20 @@ window.addEventListener("click", function () {
   }
 });
 
-function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue) {
+function Circle(
+  x,
+  y,
+  dx,
+  dy,
+  radius,
+  red,
+  green,
+  blue,
+  dred,
+  dgreen,
+  dblue,
+  sub
+) {
   this.x = x;
   this.y = y;
   this.dx = dx;
@@ -72,6 +83,8 @@ function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue) {
   this.dgreen = dgreen;
   this.dblue = dblue;
   this.color = colorArray[Math.floor(Math.random() * colorArray.length)];
+  this.sub = sub;
+  this.counter = 0;
 
   this.draw = function () {
     c.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
@@ -105,8 +118,15 @@ function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue) {
     //   this.dblue = -this.dblue;
     // }
 
-    this.x += this.dx * 4;
-    this.y += this.dy * 8;
+    this.x += this.dx * 10;
+    this.y += this.dy * 20;
+    this.counter++;
+
+    if (this.sub) {
+      console.log("dx", Math.sin(this.counter));
+      this.x += 6 * Math.cos(this.counter * 0.1);
+      this.y += 6 * Math.sin(this.counter * 0.1);
+    }
 
     // // Update colors
     // this.red += this.dred;
@@ -119,7 +139,7 @@ function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue) {
 var circleArray = [];
 function init() {
   circleArray = [];
-  for (var i = 0; i < 4; i++) {
+  for (var i = 0; i < 3; i++) {
     var radius = Math.random() * 3 + 10;
     var x = Math.random() * (innerWidth - radius * 2) + radius;
     var y = Math.random() * (innerHeight - radius * 2) + radius;
@@ -131,10 +151,42 @@ function init() {
     var dred = 3;
     var dgreen = -4; // Step for green
     var dblue = 5; // Step for blue
-
+    console.log("x", x);
     circleArray.push(
-      new Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue)
+      new Circle(
+        x,
+        y,
+        dx,
+        dy,
+        radius,
+        red,
+        green,
+        blue,
+        dred,
+        dgreen,
+        dblue,
+        false
+      )
     );
+    for (var j = 0; j < 1; j++) {
+      let subX = x - 0;
+      circleArray.push(
+        new Circle(
+          subX,
+          y,
+          dx,
+          dy,
+          radius,
+          red,
+          green,
+          blue,
+          dred,
+          dgreen,
+          dblue,
+          true
+        )
+      );
+    }
   }
 }
 
@@ -153,3 +205,29 @@ function animate() {
 init();
 
 animate();
+
+// for (var j = 0; j < 1; j++) {
+//   var subRadius = Math.random() * 3 + 10;
+//   var subX = Math.random() * (innerWidth - radius * 2) + radius;
+//   var subY = Math.random() * (innerHeight - radius * 2) + radius;
+//   var subDx = Math.random() - 0.5;
+//   var subDy = Math.random() - 0.5;
+//   var subRed = Math.random() * 255;
+//   var suGreen = Math.random() * 255;
+//   var subBlue = Math.random() * 255;
+//   var subDred = 3;
+//   var subDgreen = -4; // Step for green
+//   var subDblue = 5; // Step for blue
+//   new Circle(
+//     subX,
+//     subY,
+//     subDx,
+//     subDy,
+//     subRadius,
+//     subRed,
+//     subGreen,
+//     subBlue,
+//     subDred,
+//     subDgreen,
+//     subDblue
+//   );
