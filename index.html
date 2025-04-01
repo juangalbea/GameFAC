@@ -17,11 +17,21 @@
       <!-- From Uiverse.io by gharsh11032000 --> 
        <div><h1>Smash the Balls</h1></div>
        <div><p>Destroy all the ball brefore the time finishes</p></div>
+       <div class="music">
+        <h2>Music</h2>
+        <div>
+          <button type="button" onclick="event.stopPropagation(); playMusic('music/tetris.mp3')">Tetris</button>
+          <button type="button" onclick="event.stopPropagation(); playMusic('music/mario.mp3')">Mario</button>
+          <button type="button" onclick="event.stopPropagation(); playMusic('music/sonic.mp3')">Sonic</button>
+          <button type="button" onclick="event.stopPropagation(); muteMusic()">Mute</button>
+        </div>
+      </div>
        <div><button id="cancel" type="reset" class="button"></button></div>
       
     </div>
   </form>
 </dialog>
+
 
 <!-- <div>
   <button id="updateDetails">Update details</button>

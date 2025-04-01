@@ -84,4 +84,22 @@ body {
   scale: 0.95;
 }
 
+.music div {
+  display: flex;
+  justify-content: space-between;
+}
 
+.music h2 {
+  margin-right: 50px;
+}
+
+.music button {
+  margin: 20px;
+  cursor: pointer;
+  padding: 1px 20px;
+}
+
+.music button:hover {
+  background-color: #7b4397;
+  color: white;
+}
