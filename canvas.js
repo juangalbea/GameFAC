@@ -147,6 +147,9 @@ function Circle(
     // c.fillStyle = this.color;
     c.fill();
   };
+  let counter = 10;
+  let lastCounterUpdate = Date.now();
+  let counterActive = true;
 
   this.update = function () {
     if (!this.disappear) {
@@ -157,6 +160,18 @@ function Circle(
       if (this.y + this.radius > innerHeight || this.y - this.radius < 0) {
         this.dy = -this.dy;
       }
+    }
+    if (counterActive && Date.now() - lastCounterUpdate >= 1000) {
+      counter--;
+      lastCounterUpdate = Date.now();
+
+      if (counter <= 0) {
+        counter = 0;
+        counterActive = false;
+      }
+    }
+    if (counter === 0) {
+      console.log("fail");
     }
 
     // // Toggle direction for red
@@ -175,7 +190,7 @@ function Circle(
     this.x += this.dx * (this.disappear ? 40 : 1.5);
     this.y += this.dy * (this.disappear ? 50 : 2);
 
-    this.counter++;
+    // this.counter++;
     // console.log("x", this.x, "y", this.y);
     // console.log("subCircles", this.subCircles);
 
@@ -183,7 +198,8 @@ function Circle(
     // this.red += this.dred;
     // this.green += this.dgreen;
     // this.blue += this.dblue;
-
+    c.font = "50px Arial";
+    c.fillText(`${counter}`, 10, 80);
     this.draw();
   };
 }
@@ -222,6 +238,17 @@ function animate() {
 
 animate();
 
-const myAudio = document.createElement("audio");
-myAudio.src = "tetris.mp3";
-// myAudio.play() ;
+const myAudio = new Audio();
+
+function playMusic(src) {
+  myAudio.src = src;
+  myAudio.currentTime = 0;
+  myAudio.muted = false;
+  myAudio.play().catch((err) => {
+    console.log("Playback error:", err);
+  });
+}
+
+function muteMusic() {
+  myAudio.muted = true;
+}
