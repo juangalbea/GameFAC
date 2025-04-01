@@ -32,27 +32,38 @@ var sendCircles = [];
 
 window.addEventListener("click", function () {
   // console.log("clicked", mouse.x);
+  console.log("click", mouse.x, mouse.y, circleArray);
+  circleArray.forEach((item, index, object) => {
+    if (
+      Math.abs(item.x - mouse.x + 2) < 12 &&
+      Math.abs(item.y - mouse.y - 4) < 12
+    ) {
+      console.log("hehe");
+      object.splice(index, 1);
+    }
+    console.log(item.x, mouse.x, "hehe", item.y, mouse.y);
+  });
 
-  for (var i = 0; i < 10; i++) {
-    var radius = Math.random() * 3 + 10;
-    var angle = Math.random() * Math.PI * 2;
-    var distance = Math.random() * 50; // Adjust 50 for the desired spread radius
-    var x = mouse.x + Math.cos(angle) * distance;
-    var y = mouse.y + Math.sin(angle) * distance;
+  // for (var i = 0; i < 10; i++) {
+  //   var radius = Math.random() * 3 + 10;
+  //   var angle = Math.random() * Math.PI * 2;
+  //   var distance = Math.random() * 50; // Adjust 50 for the desired spread radius
+  //   var x = mouse.x + Math.cos(angle) * distance;
+  //   var y = mouse.y + Math.sin(angle) * distance;
 
-    var dx = Math.random() - 0.5;
-    var dy = Math.random() - 0.5;
-    var red = Math.random() * 255;
-    var green = Math.random() * 255;
-    var blue = Math.random() * 255;
-    var dred = 1.5;
-    var dgreen = -2; // Step for green
-    var dblue = 2.5; // Step for blue
+  //   var dx = Math.random() - 0.5;
+  //   var dy = Math.random() - 0.5;
+  //   var red = Math.random() * 255;
+  //   var green = Math.random() * 255;
+  //   var blue = Math.random() * 255;
+  //   var dred = 1.5;
+  //   var dgreen = -2; // Step for green
+  //   var dblue = 2.5; // Step for blue
 
-    sendCircles.push(
-      new Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue)
-    );
-  }
+  //   sendCircles.push(
+  //     new Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue, 0)
+  //   );
+  // }
 });
 
 function Circle(
@@ -67,7 +78,7 @@ function Circle(
   dred,
   dgreen,
   dblue,
-  sub
+  subCircles
 ) {
   this.x = x;
   this.y = y;
@@ -83,7 +94,7 @@ function Circle(
   this.dgreen = dgreen;
   this.dblue = dblue;
   this.color = colorArray[Math.floor(Math.random() * colorArray.length)];
-  this.sub = sub;
+  this.subCircles = subCircles;
   this.counter = 0;
 
   this.draw = function () {
@@ -118,15 +129,11 @@ function Circle(
     //   this.dblue = -this.dblue;
     // }
 
-    this.x += this.dx * 10;
-    this.y += this.dy * 20;
+    this.x += this.dx * 1;
+    this.y += this.dy * 2;
     this.counter++;
-
-    if (this.sub) {
-      console.log("dx", Math.sin(this.counter));
-      this.x += 6 * Math.cos(this.counter * 0.1);
-      this.y += 6 * Math.sin(this.counter * 0.1);
-    }
+    // console.log("x", this.x, "y", this.y);
+    // console.log("subCircles", this.subCircles);
 
     // // Update colors
     // this.red += this.dred;
@@ -139,7 +146,7 @@ function Circle(
 var circleArray = [];
 function init() {
   circleArray = [];
-  for (var i = 0; i < 3; i++) {
+  for (var i = 0; i < 7; i++) {
     var radius = Math.random() * 3 + 10;
     var x = Math.random() * (innerWidth - radius * 2) + radius;
     var y = Math.random() * (innerHeight - radius * 2) + radius;
@@ -153,40 +160,8 @@ function init() {
     var dblue = 5; // Step for blue
     console.log("x", x);
     circleArray.push(
-      new Circle(
-        x,
-        y,
-        dx,
-        dy,
-        radius,
-        red,
-        green,
-        blue,
-        dred,
-        dgreen,
-        dblue,
-        false
-      )
+      new Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue, 1)
     );
-    for (var j = 0; j < 1; j++) {
-      let subX = x - 0;
-      circleArray.push(
-        new Circle(
-          subX,
-          y,
-          dx,
-          dy,
-          radius,
-          red,
-          green,
-          blue,
-          dred,
-          dgreen,
-          dblue,
-          true
-        )
-      );
-    }
   }
 }
 
@@ -206,28 +181,6 @@ init();
 
 animate();
 
-// for (var j = 0; j < 1; j++) {
-//   var subRadius = Math.random() * 3 + 10;
-//   var subX = Math.random() * (innerWidth - radius * 2) + radius;
-//   var subY = Math.random() * (innerHeight - radius * 2) + radius;
-//   var subDx = Math.random() - 0.5;
-//   var subDy = Math.random() - 0.5;
-//   var subRed = Math.random() * 255;
-//   var suGreen = Math.random() * 255;
-//   var subBlue = Math.random() * 255;
-//   var subDred = 3;
-//   var subDgreen = -4; // Step for green
-//   var subDblue = 5; // Step for blue
-//   new Circle(
-//     subX,
-//     subY,
-//     subDx,
-//     subDy,
-//     subRadius,
-//     subRed,
-//     subGreen,
-//     subBlue,
-//     subDred,
-//     subDgreen,
-//     subDblue
-//   );
+const myAudio = document.createElement("audio");
+myAudio.src = "tetris.mp3";
+// myAudio.play() ;
