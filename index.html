@@ -4,17 +4,29 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Canvas Resize</title>
-  <style type="text/css">
-    canvas {
-      border: 1px solid black;
-    }
-
-    body {
-      margin: 0;
-    }
-  </style>
+  <link href="styles.css" rel="stylesheet" />
 </head>
 <body>
+  <!-- pop-up dialog box, containing a form -->
+<dialog id="favDialog">
+  <form method="dialog">
+    
+    <div id="instructions">
+
+      <!-- <button id="cancel" type="reset">Start</button> -->
+      <!-- From Uiverse.io by gharsh11032000 --> 
+       <div><h1>Smash the Balls</h1></div>
+       <div><p>Destroy all the ball brefore the time finishes</p></div>
+       <div><button id="cancel" type="reset" class="button"></button></div>
+      
+    </div>
+  </form>
+</dialog>
+
+<!-- <div>
+  <button id="updateDetails">Update details</button>
+</div> -->
+    
   <canvas></canvas>
   <script src="canvas.js"></script>
 </body>
