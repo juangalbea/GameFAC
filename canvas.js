@@ -65,6 +65,11 @@ window.addEventListener("click", function () {
       Math.abs(item.x - mouse.x + 2) < 20 &&
       Math.abs(item.y - mouse.y - 4) < 20
     ) {
+      const themes = ["badnik", "collapse", "jump", "spring", "tally"];
+      const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+
+      const audio = new Audio(`music/${randomTheme}.mp3`);
+      audio.play();
       object.splice(index, 1);
       for (var i = 0; i < 100; i++) {
         var radius = Math.random() * 3 + 10;
@@ -100,6 +105,44 @@ window.addEventListener("click", function () {
             disappear
           )
         );
+      }
+      if (circleArray.length == 0) {
+        playMusic("music/finished.mp3");
+        for (var i = 0; i < 10000; i++) {
+          var radius = Math.random() * 3 + 10;
+          var angle = Math.random() * Math.PI * 2;
+          var distance = Math.random() * 50; // Adjust 50 for the desired spread radius
+          var x = canvas.width / 2;
+          var y = canvas.height / 2;
+
+          var dx = Math.random() - 0.5;
+          var dy = Math.random() - 0.5;
+          var red = Math.random() * 255;
+          var green = Math.random() * 255;
+          var blue = Math.random() * 255;
+          var dred = 1.5;
+          var dgreen = -2; // Step for green
+          var dblue = 2.5; // Step for blue
+          var disappear = true;
+
+          sendCircles.push(
+            new Circle(
+              x,
+              y,
+              dx,
+              dy,
+              radius,
+              red,
+              green,
+              blue,
+              dred,
+              dgreen,
+              dblue,
+              0,
+              disappear
+            )
+          );
+        }
       }
     }
   });
@@ -206,7 +249,7 @@ function Circle(
 var circleArray = [];
 function init() {
   circleArray = [];
-  for (var i = 0; i < 5; i++) {
+  for (var i = 0; i < 7; i++) {
     var radius = Math.random() * 3 + 10;
     var x = Math.random() * (innerWidth - radius * 2) + radius;
     var y = Math.random() * (innerHeight - radius * 2) + radius;
