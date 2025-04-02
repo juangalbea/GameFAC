@@ -295,3 +295,8 @@ function playMusic(src) {
 function muteMusic() {
   myAudio.muted = true;
 }
+
+// Execute a function every 1 second
+const intervalId = setInterval(() => {
+  console.log('Interval executed every 1 second');
+}, 1000);
