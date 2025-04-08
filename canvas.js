@@ -38,6 +38,8 @@ var mouse = {
   y: undefined,
 };
 
+let animationActive = true; // 🟢 Used to control whether animate() continues
+
 var maxRadius = 30;
 var minRadius = 10;
 
@@ -108,6 +110,10 @@ window.addEventListener("click", function () {
       }
       if (circleArray.length == 0) {
         playMusic("music/finished.mp3");
+        setTimeout(() => {
+          document.getElementById("passedModal").showModal();
+        }, 3000);
+
         for (var i = 0; i < 10000; i++) {
           var radius = Math.random() * 3 + 10;
           var angle = Math.random() * Math.PI * 2;
@@ -252,6 +258,7 @@ function init() {
 }
 
 function animate() {
+  if (!animationActive) return; // 🔴 Stop the loop if disabled
   requestAnimationFrame(animate);
   c.clearRect(0, 0, innerWidth, innerHeight);
 
@@ -281,6 +288,22 @@ function muteMusic() {
 }
 
 // Execute a function every 1 second
-const intervalId = setInterval(() => {
-  console.log("Interval executed every 1 second");
-}, 1000);
+// const intervalId = setInterval(() => {
+//   console.log("Interval executed every 1 second");
+// }, 1000);
+
+const passedModal = document.getElementById("passedModal");
+
+passedModal.addEventListener("click", () => {
+  passedModal.close(); // 🔒 Close "Passed" modal
+  animationActive = false; // 🛑 Stop animation
+  c.clearRect(0, 0, canvas.width, canvas.height); // 🧼 Clear canvas
+  circleArray = []; // Reset game data
+  sendCircles = [];
+
+  // 🕒 Small delay to allow modal to fully close
+  setTimeout(() => {
+    dialog.showModal(); // ✅ Show the "favDialog" modal
+    openCheck(dialog); // (Optional) Debug check
+  }, 100);
+});
