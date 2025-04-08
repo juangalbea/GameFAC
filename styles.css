@@ -39,7 +39,7 @@ body {
   content: "";
   position: absolute;
   inset: 0;
-  background-image: url('Smash.png');
+  background-image: url('images/Smash.png');
   background-size: cover;
   background-position: center 35%;
   opacity: 0.2;
@@ -189,4 +189,24 @@ body {
 .music button:hover {
   background-color: #7b4397;
   color: white;
+}
+
+#passedModal {
+  border: none;
+  padding: 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+#passedModal::backdrop {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+#passedScreen {
+  width: 50rem;
+  height: 35rem;
+  background-image: url('images/passed.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
