@@ -7,30 +7,38 @@
   <link href="styles.css" rel="stylesheet" />
 </head>
 <body>
+  <dialog id="introModal">
+    <img src="Smash.png" id="startImage" style="width: 100%; height: auto; cursor: pointer;" />
+  </dialog>
   <!-- pop-up dialog box, containing a form -->
-<dialog id="favDialog">
-  <form method="dialog">
-    
-    <div id="instructions">
-
-      <!-- <button id="cancel" type="reset">Start</button> -->
-      <!-- From Uiverse.io by gharsh11032000 --> 
-       <div><h1>Smash the Balls</h1></div>
-       <div><p>Destroy all the starting balls by clicking on them before time runs out.</p></div>
-       <div class="music">
-        <h2>Music</h2>
-        <div>
-          <button type="button" onclick="event.stopPropagation(); playMusic('music/tetris.mp3')">Tetris</button>
-          <button type="button" onclick="event.stopPropagation(); playMusic('music/mario.mp3')">Mario</button>
-          <button type="button" onclick="event.stopPropagation(); playMusic('music/sonic.mp3')">Sonic</button>
-          <button type="button" onclick="event.stopPropagation(); muteMusic()">Mute</button>
+  <dialog id="favDialog">
+    <form method="dialog">
+      <div id="instructions">
+        <div class="title">
+          <h1>🎯 Smash the Balls</h1>
+        </div>
+  
+        <div class="description">
+          <p>💣 Destroy all the starting balls by clicking on them before time runs out. Can you beat the countdown?</p>
+        </div>
+  
+        <div class="music">
+          <h2>🎵 Choose Your Theme</h2>
+          <div class="music-buttons">
+            <button type="button" onclick="event.stopPropagation(); playMusic('music/tetris.mp3')">Tetris</button>
+            <button type="button" onclick="event.stopPropagation(); playMusic('music/mario.mp3')">Mario</button>
+            <button type="button" onclick="event.stopPropagation(); playMusic('music/sonic.mp3')">Sonic</button>
+            <button type="button" onclick="event.stopPropagation(); muteMusic()">Mute</button>
+          </div>
+        </div>
+  
+        <div class="start-button">
+          <button id="cancel" type="reset">🚀 Start Game</button>
         </div>
       </div>
-       <div><button id="cancel" type="reset" class="button"></button></div>
-      
-    </div>
-  </form>
-</dialog>
+    </form>
+  </dialog>
+  
 
 
 <!-- <div>
