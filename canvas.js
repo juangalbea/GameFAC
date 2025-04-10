@@ -23,8 +23,12 @@ openCheck(dialog);
 cancelButton.addEventListener("click", () => {
   dialog.close("animalNotChosen");
   openCheck(dialog);
-  init();
+
+  init(); // ✅ Recreate the game objects
+  animationActive = true; // ✅ Enable animation
+  animate(); // ✅ Restart animation loop
 });
+
 
 var canvas = document.querySelector("canvas");
 
