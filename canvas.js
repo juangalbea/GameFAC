@@ -1,8 +1,12 @@
-// const updateButton = document.getElementById("updateDetails");
+// Get DOM elements
 const cancelButton = document.getElementById("cancel");
 const dialog = document.getElementById("favDialog");
 dialog.returnValue = "favAnimal";
 
+// Show the game instructions modal on load
+dialog.showModal();
+
+// Debug log to check modal status
 function openCheck(dialog) {
   if (dialog.open) {
     console.log("Dialog open");
@@ -10,165 +14,106 @@ function openCheck(dialog) {
     console.log("Dialog closed");
   }
 }
-
-
-dialog.showModal();
 openCheck(dialog);
 
-// Form cancel button closes the dialog box
+// When Start Game button is clicked
 cancelButton.addEventListener("click", () => {
   dialog.close("animalNotChosen");
   openCheck(dialog);
 
-  init(); // ✅ Recreate the game objects
-  animationActive = true; // ✅ Enable animation
-  animate(); // ✅ Restart animation loop
+  init();              // Set up the game balls
+  animationActive = true;
+  animate();           // Start animation loop
 });
 
-
-var canvas = document.querySelector("canvas");
-
+// Canvas setup
+const canvas = document.querySelector("canvas");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+const c = canvas.getContext("2d");
 
-var c = canvas.getContext("2d");
+// Track mouse position
+const mouse = { x: undefined, y: undefined };
 
-var mouse = {
-  x: undefined,
-  y: undefined,
-};
+// Animation control flag
+let animationActive = true;
 
-let animationActive = true; // 🟢 Used to control whether animate() continues
+// Config
+const maxRadius = 30;
+const minRadius = 10;
+const colorArray = ["#012030", "#13678A", "#45C4B0", "#9AEBA3", "#DAFDBA"];
 
-var maxRadius = 30;
-var minRadius = 10;
-
-var colorArray = ["#012030", "#012030", "#012030", "#012030", "#012030"];
-
-window.addEventListener("mousemove", function (event) {
+window.addEventListener("mousemove", (event) => {
   mouse.x = event.x;
   mouse.y = event.y;
-  // console.log(mouse);
 });
 
-window.addEventListener("resize", function () {
+// Resize canvas and restart game
+window.addEventListener("resize", () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-
   init();
 });
 
-var sendCircles = [];
+// Array for explosion particle effects
+let sendCircles = [];
 
-window.addEventListener("click", function () {
-  // console.log("clicked", mouse.x);
+// When user clicks the canvas
+window.addEventListener("click", () => {
   circleArray.forEach((item, index, object) => {
-    if (
-      Math.abs(item.x - mouse.x + 2) < 20 &&
-      Math.abs(item.y - mouse.y - 4) < 20
-    ) {
+    // Check if clicked near the circle
+    if (Math.abs(item.x - mouse.x + 2) < 20 && Math.abs(item.y - mouse.y - 4) < 20) {
+      // Play random SFX
       const themes = ["badnik", "collapse", "jump", "spring", "tally"];
       const randomTheme = themes[Math.floor(Math.random() * themes.length)];
+      new Audio(`music/${randomTheme}.mp3`).play();
 
-      const audio = new Audio(`music/${randomTheme}.mp3`);
-      audio.play();
+      // Remove the ball
       object.splice(index, 1);
-      for (var i = 0; i < 100; i++) {
-        var radius = Math.random() * 3 + 10;
-        var angle = Math.random() * Math.PI * 2;
-        var distance = Math.random() * 50; // Adjust 50 for the desired spread radius
-        var x = mouse.x + Math.cos(angle) * distance;
-        var y = mouse.y + Math.sin(angle) * distance;
 
-        var dx = Math.random() - 0.5;
-        var dy = Math.random() - 0.5;
-        var red = Math.random() * 255;
-        var green = Math.random() * 255;
-        var blue = Math.random() * 255;
-        var dred = 1.5;
-        var dgreen = -2; // Step for green
-        var dblue = 2.5; // Step for blue
-        var disappear = true;
-
-        sendCircles.push(
-          new Circle(
-            x,
-            y,
-            dx,
-            dy,
-            radius,
-            red,
-            green,
-            blue,
-            dred,
-            dgreen,
-            dblue,
-            0,
-            disappear
-          )
-        );
+      // Create explosion particles
+      for (let i = 0; i < 100; i++) {
+        createParticle(mouse.x, mouse.y);
       }
-      if (circleArray.length == 0) {
+
+      // If no balls left, game won
+      if (circleArray.length === 0) {
         playMusic("music/finished.mp3");
         setTimeout(() => {
           document.getElementById("passedModal").showModal();
         }, 3000);
 
-        for (var i = 0; i < 10000; i++) {
-          var radius = Math.random() * 3 + 10;
-          var angle = Math.random() * Math.PI * 2;
-          var distance = Math.random() * 50; // Adjust 50 for the desired spread radius
-          var x = canvas.width / 2;
-          var y = canvas.height / 2;
-
-          var dx = Math.random() - 0.5;
-          var dy = Math.random() - 0.5;
-          var red = Math.random() * 255;
-          var green = Math.random() * 255;
-          var blue = Math.random() * 255;
-          var dred = 1.5;
-          var dgreen = -2; // Step for green
-          var dblue = 2.5; // Step for blue
-          var disappear = true;
-
-          sendCircles.push(
-            new Circle(
-              x,
-              y,
-              dx,
-              dy,
-              radius,
-              red,
-              green,
-              blue,
-              dred,
-              dgreen,
-              dblue,
-              0,
-              disappear
-            )
-          );
+        // Big explosion from center
+        for (let i = 0; i < 10000; i++) {
+          createParticle(canvas.width / 2, canvas.height / 2);
         }
       }
     }
   });
 });
 
-function Circle(
-  x,
-  y,
-  dx,
-  dy,
-  radius,
-  red,
-  green,
-  blue,
-  dred,
-  dgreen,
-  dblue,
-  subCircles,
-  disappear
-) {
+// Particle + Circle generator function
+function createParticle(x, y) {
+  const radius = Math.random() * 3 + 10;
+  const angle = Math.random() * Math.PI * 2;
+  const distance = Math.random() * 50;
+  const dx = Math.random() - 0.5;
+  const dy = Math.random() - 0.5;
+  const red = Math.random() * 255;
+  const green = Math.random() * 255;
+  const blue = Math.random() * 255;
+  const dred = 1.5;
+  const dgreen = -2;
+  const dblue = 2.5;
+  const disappear = true;
+
+  sendCircles.push(
+    new Circle(x + Math.cos(angle) * distance, y + Math.sin(angle) * distance, dx, dy, radius, red, green, blue, dred, dgreen, dblue, 0, disappear)
+  );
+}
+
+// Ball or particle object
+function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue, subCircles, disappear) {
   this.x = x;
   this.y = y;
   this.dx = dx;
@@ -187,98 +132,95 @@ function Circle(
   this.counter = 0;
   this.disappear = disappear;
 
+  // Draw the circle
   this.draw = function () {
     c.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
     c.beginPath();
-    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+    c.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     c.fill();
   };
 
+  // Update position
   this.update = function () {
     if (!this.disappear) {
-      if (this.x + this.radius > innerWidth || this.x - this.radius < 0) {
-        this.dx = -this.dx;
-      }
-
-      if (this.y + this.radius > innerHeight || this.y - this.radius < 0) {
-        this.dy = -this.dy;
-      }
+      if (this.x + this.radius > innerWidth || this.x - this.radius < 0) this.dx = -this.dx;
+      if (this.y + this.radius > innerHeight || this.y - this.radius < 0) this.dy = -this.dy;
     }
 
-
+    // Move faster if it's an explosion
     this.x += this.dx * (this.disappear ? 40 : 1.5);
     this.y += this.dy * (this.disappear ? 50 : 2);
-
-
 
     this.draw();
   };
 }
-var circleArray = [];
+
+// Array of main balls
+let circleArray = [];
+
+// Initialize main game balls
 function init() {
   circleArray = [];
-  for (var i = 0; i < 7; i++) {
-    var radius = Math.random() * 3 + 10;
-    var x = Math.random() * (innerWidth - radius * 2) + radius;
-    var y = Math.random() * (innerHeight - radius * 2) + radius;
-    var dx = Math.random() - 0.5;
-    var dy = Math.random() - 0.5;
-    var red = Math.random() * 255;
-    var green = Math.random() * 255;
-    var blue = Math.random() * 255;
-    var dred = 3;
-    var dgreen = -4; // Step for green
-    var dblue = 5; // Step for blue
-    circleArray.push(
-      new Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue, 1)
-    );
+  for (let i = 0; i < 7; i++) {
+    const radius = Math.random() * 3 + 10;
+    const x = Math.random() * (innerWidth - radius * 2) + radius;
+    const y = Math.random() * (innerHeight - radius * 2) + radius;
+    const dx = Math.random() - 0.5;
+    const dy = Math.random() - 0.5;
+    const red = Math.random() * 255;
+    const green = Math.random() * 255;
+    const blue = Math.random() * 255;
+    const dred = 3;
+    const dgreen = -4;
+    const dblue = 5;
+
+    circleArray.push(new Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue, 1));
   }
 }
 
+// Main animation loop
 function animate() {
-  if (!animationActive) return; // 🔴 Stop the loop if disabled
+  if (!animationActive) return;
   requestAnimationFrame(animate);
   c.clearRect(0, 0, innerWidth, innerHeight);
 
-  for (var i = 0; i < circleArray.length; i++) {
+  // Draw main balls
+  for (let i = 0; i < circleArray.length; i++) {
     circleArray[i].update();
   }
-  for (var i = 0; i < sendCircles.length; i++) {
+
+  // Draw explosion particles
+  for (let i = 0; i < sendCircles.length; i++) {
     sendCircles[i].update();
   }
 }
 
+// Start the animation
 animate();
 
+// Music player
 const myAudio = new Audio();
-
 function playMusic(src) {
   myAudio.src = src;
   myAudio.currentTime = 0;
   myAudio.muted = false;
-  myAudio.play().catch((err) => {
-    console.log("Playback error:", err);
-  });
+  myAudio.play().catch((err) => console.log("Playback error:", err));
 }
-
 function muteMusic() {
   myAudio.muted = true;
 }
 
-
-
+// Handle passedModal click (restart)
 const passedModal = document.getElementById("passedModal");
-
 passedModal.addEventListener("click", () => {
-  passedModal.close(); // 🔒 Close "Passed" modal
-  animationActive = false; // 🛑 Stop animation
-  c.clearRect(0, 0, canvas.width, canvas.height); // 🧼 Clear canvas
-  circleArray = []; // Reset game data
+  passedModal.close();
+  animationActive = false;
+  c.clearRect(0, 0, canvas.width, canvas.height);
+  circleArray = [];
   sendCircles = [];
 
-  // 🕒 Small delay to allow modal to fully close
   setTimeout(() => {
-    dialog.showModal(); // ✅ Show the "favDialog" modal
-    openCheck(dialog); // (Optional) Debug check
+    dialog.showModal();
+    openCheck(dialog);
   }, 100);
 });
