@@ -11,11 +11,7 @@ function openCheck(dialog) {
   }
 }
 
-// Update button opens a modal dialog
-// updateButton.addEventListener("click", () => {
-//   dialog.showModal();
-//   openCheck(dialog);
-// });
+
 dialog.showModal();
 openCheck(dialog);
 
@@ -47,7 +43,7 @@ let animationActive = true; // 🟢 Used to control whether animate() continues
 var maxRadius = 30;
 var minRadius = 10;
 
-var colorArray = ["#012030", "#13678A", "#45C4B0", "#9AEBA3", "#DAFDBA"];
+var colorArray = ["#012030", "#012030", "#012030", "#012030", "#012030"];
 
 window.addEventListener("mousemove", function (event) {
   mouse.x = event.x;
@@ -195,9 +191,6 @@ function Circle(
     c.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
     c.beginPath();
     c.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
-    // c.strokeStyle = "blue";
-    // c.stroke();
-    // c.fillStyle = this.color;
     c.fill();
   };
 
@@ -212,30 +205,11 @@ function Circle(
       }
     }
 
-    // // Toggle direction for red
-    // if (this.red > 255 || this.red < 0) {
-    //   this.dred = -this.dred;
-    // }
-    // // Toggle direction for green
-    // if (this.green > 255 || this.green < 0) {
-    //   this.dgreen = -this.dgreen;
-    // }
-    // // Toggle direction for blue
-    // if (this.blue > 255 || this.blue < 0) {
-    //   this.dblue = -this.dblue;
-    // }
 
     this.x += this.dx * (this.disappear ? 40 : 1.5);
     this.y += this.dy * (this.disappear ? 50 : 2);
 
-    // this.counter++;
-    // console.log("x", this.x, "y", this.y);
-    // console.log("subCircles", this.subCircles);
 
-    // // Update colors
-    // this.red += this.dred;
-    // this.green += this.dgreen;
-    // this.blue += this.dblue;
 
     this.draw();
   };
@@ -291,10 +265,7 @@ function muteMusic() {
   myAudio.muted = true;
 }
 
-// Execute a function every 1 second
-// const intervalId = setInterval(() => {
-//   console.log("Interval executed every 1 second");
-// }, 1000);
+
 
 const passedModal = document.getElementById("passedModal");
 
