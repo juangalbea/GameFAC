@@ -102,18 +102,16 @@ function createParticle(x, y) {
   const red = Math.random() * 255;
   const green = Math.random() * 255;
   const blue = Math.random() * 255;
-  const dred = 1.5;
-  const dgreen = -2;
-  const dblue = 2.5;
+
   const disappear = true;
 
   sendCircles.push(
-    new Circle(x + Math.cos(angle) * distance, y + Math.sin(angle) * distance, dx, dy, radius, red, green, blue, dred, dgreen, dblue, 0, disappear)
+    new Circle(x + Math.cos(angle) * distance, y + Math.sin(angle) * distance, dx, dy, radius, red, green, blue, 0, disappear)
   );
 }
 
 // Ball or particle object
-function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue, subCircles, disappear) {
+function Circle(x, y, dx, dy, radius, red, green, blue, subCircles, disappear) {
   this.x = x;
   this.y = y;
   this.dx = dx;
@@ -124,9 +122,9 @@ function Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue, sub
   this.red = red;
   this.green = green;
   this.blue = blue;
-  this.dred = dred;
-  this.dgreen = dgreen;
-  this.dblue = dblue;
+
+
+
   this.color = colorArray[Math.floor(Math.random() * colorArray.length)];
   this.subCircles = subCircles;
   this.counter = 0;
@@ -170,11 +168,9 @@ function init() {
     const red = Math.random() * 255;
     const green = Math.random() * 255;
     const blue = Math.random() * 255;
-    const dred = 3;
-    const dgreen = -4;
-    const dblue = 5;
 
-    circleArray.push(new Circle(x, y, dx, dy, radius, red, green, blue, dred, dgreen, dblue, 1));
+
+    circleArray.push(new Circle(x, y, dx, dy, radius, red, green, blue, 1));
   }
 }
 
