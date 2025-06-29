@@ -1,27 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Canvas Resize</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Smash the Balls</title>
   <link href="styles.css" rel="stylesheet" />
 </head>
 <body>
-  <!-- <dialog id="introModal">
-    <img src="Smash.png" id="startImage" style="width: 100%; height: auto; cursor: pointer;" />
-  </dialog> -->
-  <!-- pop-up dialog box, containing a form -->
-  <dialog id="favDialog">
+  <dialog id="instructionsModal">
     <form method="dialog">
       <div id="instructions">
         <div class="title">
           <h1>🎯 Smash the Balls</h1>
         </div>
-  
         <div class="description">
-          <p>💣 Destroy all the starting balls by clicking on them before time runs out. Can you beat the countdown?</p>
+          <p>💣 Destroy all the balls by clicking on them before time runs out. Can you beat the countdown?</p>
         </div>
-  
         <div class="music">
           <h2>🎵 Choose Your Theme</h2>
           <div class="music-buttons">
@@ -31,24 +25,17 @@
             <button type="button" onclick="event.stopPropagation(); muteMusic()">Mute</button>
           </div>
         </div>
-  
         <div class="start-button">
-          <button id="cancel" type="reset">🚀 Start Game</button>
+          <button id="startGameButton" type="button">🚀 Start Game</button>
         </div>
       </div>
     </form>
   </dialog>
-  <dialog id="passedModal">
-    <img src="images/passed.png" alt="Passed!" style="width: 100%; height: auto; display: block;" />
+
+  <dialog id="winModal">
+    <img src="images/passed.png" alt="You Won!" style="width: 100%; height: auto;" />
   </dialog>
-  
-  
 
-
-<!-- <div>
-  <button id="updateDetails">Update details</button>
-</div> -->
-    
   <canvas></canvas>
   <script src="canvas.js"></script>
 </body>
