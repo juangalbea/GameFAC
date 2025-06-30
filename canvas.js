@@ -23,7 +23,6 @@ let particles = [];
 
 const mouse = { x: undefined, y: undefined };
 const CLICK_RADIUS = 20;
-const colorArray = ["#012030", "#13678A", "#45C4B0", "#9AEBA3", "#DAFDBA"];
 const gameAudio = new Audio();
 
 // ==============================
