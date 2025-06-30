@@ -25,6 +25,9 @@ const mouse = { x: undefined, y: undefined };
 const CLICK_RADIUS = 20;
 const gameAudio = new Audio();
 
+let timeLeft = 20;
+let countdownInterval;
+
 // ==============================
 // Audio Controls
 // ==============================
@@ -137,10 +140,18 @@ function createExplosion(x, y, count = 100) {
 // Main Animation Loop
 // ==============================
 function animate() {
+  console.log("Drawing timer:", timeLeft);
+
   if (!animationActive) return;
   requestAnimationFrame(animate);
+
   ctx.clearRect(0, 0, innerWidth, innerHeight);
 
+  ctx.fillStyle = "#00ff88";
+  ctx.font = "bold 28px Arial";
+  ctx.fillText(`⏱️ ${timeLeft}`, 20, 45);
+
+  // ✅ Then draw objects
   balls.forEach((b) => b.update());
   particles.forEach((p) => p.update());
 }
@@ -153,6 +164,18 @@ function animate() {
 startGameButton.addEventListener("click", () => {
   instructionsModal.close();
   startNewGame();
+  timeLeft = 20;
+  clearInterval(countdownInterval);
+  countdownInterval = setInterval(() => {
+    timeLeft--;
+    if (timeLeft <= 0) {
+      clearInterval(countdownInterval);
+      animationActive = false;
+      setTimeout(() => {
+        winModal.showModal();
+      }, 500);
+    }
+  }, 100);
   animationActive = true;
   animate();
 });
@@ -185,6 +208,7 @@ window.addEventListener("click", () => {
 
       // Win condition
       if (balls.length === 0) {
+        clearInterval(countdownInterval);
         playMusic("music/finished.mp3");
         setTimeout(() => winModal.showModal(), 3000);
         createExplosion(canvas.width / 2, canvas.height / 2, 10000);
