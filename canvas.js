@@ -4,6 +4,7 @@
 const startGameButton = document.getElementById("startGameButton");
 const instructionsModal = document.getElementById("instructionsModal");
 const winModal = document.getElementById("winModal");
+const lostModal = document.getElementById("lostModal");
 
 // Show instructions when the page loads
 instructionsModal.showModal();
@@ -25,7 +26,7 @@ const mouse = { x: undefined, y: undefined };
 const CLICK_RADIUS = 20;
 const gameAudio = new Audio();
 
-let timeLeft = 20;
+let hundredthsLeft = 1000; // 10.00 seconds in hundredths
 let countdownInterval;
 
 // ==============================
@@ -140,21 +141,22 @@ function createExplosion(x, y, count = 100) {
 // Main Animation Loop
 // ==============================
 function animate() {
-  console.log("Drawing timer:", timeLeft);
-
   if (!animationActive) return;
   requestAnimationFrame(animate);
 
   ctx.clearRect(0, 0, innerWidth, innerHeight);
 
+  // ✅ Calculate and draw timer
+  const timeLeft = (hundredthsLeft / 100).toFixed(2);
   ctx.fillStyle = "#00ff88";
   ctx.font = "bold 28px Arial";
   ctx.fillText(`⏱️ ${timeLeft}`, 20, 45);
 
-  // ✅ Then draw objects
+  // ✅ Draw game objects
   balls.forEach((b) => b.update());
   particles.forEach((p) => p.update());
 }
+
 
 // ==============================
 // Event Listeners
@@ -164,18 +166,21 @@ function animate() {
 startGameButton.addEventListener("click", () => {
   instructionsModal.close();
   startNewGame();
-  timeLeft = 20;
+  hundredthsLeft = 1000;
   clearInterval(countdownInterval);
   countdownInterval = setInterval(() => {
-    timeLeft--;
-    if (timeLeft <= 0) {
+    hundredthsLeft--;
+    if (hundredthsLeft <= 0) {
+      console.log('cuscus')
       clearInterval(countdownInterval);
       animationActive = false;
       setTimeout(() => {
-        winModal.showModal();
+        playMusic("music/game-over.mp3"); // ✅ your loss sound here
+        lostModal.showModal();
       }, 500);
     }
-  }, 100);
+  }, 10);
+
   animationActive = true;
   animate();
 });
@@ -220,6 +225,17 @@ window.addEventListener("click", () => {
 // Restart game when clicking win modal
 winModal.addEventListener("click", () => {
   winModal.close();
+  animationActive = false;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  balls = [];
+  particles = [];
+
+  setTimeout(() => instructionsModal.showModal(), 100);
+});
+
+// Restart game when clicking lost modal
+lostModal.addEventListener("click", () => {
+  lostModal.close();
   animationActive = false;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   balls = [];
