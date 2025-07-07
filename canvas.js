@@ -101,7 +101,7 @@ function startNewGame() {
     const y = Math.random() * (innerHeight - radius * 2) + radius;
     const dx = Math.random() - 0.5;
     const dy = Math.random() - 0.5;
-    const red = Math.random() * 255;
+    const red = Math.random() * 50;
     const green = Math.random() * 255;
     const blue = Math.random() * 255;
     balls.push(new GameObject(x, y, dx, dy, radius, red, green, blue));
@@ -111,16 +111,17 @@ function startNewGame() {
 // ==============================
 // Explosion Effect Generator
 // ==============================
-function createExplosion(x, y, count = 100) {
+function createExplosion(x, y, count = 10) {
   for (let i = 0; i < count; i++) {
     const radius = Math.random() * 3 + 10;
     const angle = Math.random() * Math.PI * 2;
-    const distance = Math.random() * 50;
+    const distance = 100 + Math.random() * 100;
     const dx = Math.random() - 0.5;
     const dy = Math.random() - 0.5;
-    const red = Math.random() * 255;
-    const green = Math.random() * 255;
-    const blue = Math.random() * 255;
+    // const red = Math.random() * 255;
+    const red = 255; // Fixed red color for explosion
+    const green = Math.random() * 50;
+    const blue = Math.random() * 50;
     particles.push(
       new GameObject(
         x + Math.cos(angle) * distance,
@@ -155,6 +156,15 @@ function animate() {
   // ✅ Draw game objects
   balls.forEach((b) => b.update());
   particles.forEach((p) => p.update());
+
+  // ✅ Draw mouse scope circle
+  if (mouse.x !== undefined && mouse.y !== undefined) {
+    ctx.strokeStyle = "#00ff88";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(mouse.x, mouse.y, CLICK_RADIUS, 0, Math.PI * 2);
+    ctx.stroke();
+  }
 }
 
 
@@ -166,7 +176,7 @@ function animate() {
 startGameButton.addEventListener("click", () => {
   instructionsModal.close();
   startNewGame();
-  hundredthsLeft = 1000;
+  hundredthsLeft = 10000;
   clearInterval(countdownInterval);
   countdownInterval = setInterval(() => {
     hundredthsLeft--;
@@ -201,7 +211,7 @@ window.addEventListener("resize", () => {
 // Canvas click: check if user clicked on a ball
 window.addEventListener("click", () => {
   balls.forEach((ball, index) => {
-    if (getDistance(ball.x, ball.y, mouse.x, mouse.y) < ball.radius) {
+    if (getDistance(ball.x, ball.y, mouse.x, mouse.y) <= ball.radius + CLICK_RADIUS) {
       // Play random SFX
       const sounds = ["badnik", "collapse", "jump", "spring", "tally"];
       const sfx = sounds[Math.floor(Math.random() * sounds.length)];
