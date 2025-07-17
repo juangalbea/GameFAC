@@ -111,7 +111,7 @@ function startNewGame() {
 // ==============================
 // Explosion Effect Generator
 // ==============================
-function createExplosion(x, y, count = 100) {
+function createExplosion(x, y, count = 1000) {
   for (let i = 0; i < count; i++) {
     const radius = Math.random() * 3 + 10;
     const angle = Math.random() * Math.PI * 2;
