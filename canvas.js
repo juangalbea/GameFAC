@@ -201,7 +201,7 @@ window.addEventListener("resize", () => {
 // Canvas click: check if user clicked on a ball
 window.addEventListener("click", () => {
   balls.forEach((ball, index) => {
-    if (getDistance(ball.x, ball.y, mouse.x, mouse.y) < ball.radius) {
+    if (getDistance(ball.x, ball.y, mouse.x, mouse.y) < ball.radius + CLICK_RADIUS) {
       // Play random SFX
       const sounds = ["badnik", "collapse", "jump", "spring", "tally"];
       const sfx = sounds[Math.floor(Math.random() * sounds.length)];
