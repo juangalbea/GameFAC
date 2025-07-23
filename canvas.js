@@ -50,6 +50,11 @@ function getDistance(x1, y1, x2, y2) {
   return Math.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2);
 }
 
+function cleanupGameListeners() {
+  window.removeEventListener("mousemove", handleMouseMove);
+  window.removeEventListener("click", handleClick);
+}
+
 // ==============================
 // GameObject Constructor (Ball or Particle)
 // ==============================
@@ -111,7 +116,7 @@ function startNewGame() {
 // ==============================
 // Explosion Effect Generator
 // ==============================
-function createExplosion(x, y, count = 1000) {
+function createExplosion(x, y, count = 100) {
   for (let i = 0; i < count; i++) {
     const radius = Math.random() * 3 + 10;
     const angle = Math.random() * Math.PI * 2;
@@ -155,18 +160,31 @@ function animate() {
   // ✅ Draw game objects
   balls.forEach((b) => b.update());
   particles.forEach((p) => p.update());
+
+  // ✅ Draw mouse scope circle
+  if (mouse.x !== undefined && mouse.y !== undefined) {
+    ctx.strokeStyle = "#00ff88";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(mouse.x, mouse.y, CLICK_RADIUS, 0, Math.PI * 2);
+    ctx.stroke();
+  }
 }
+
 
 
 // ==============================
 // Event Listeners
 // ==============================
 
+let handleMouseMove;
+let handleClick;
+
 // Start Game button clicked
 startGameButton.addEventListener("click", () => {
   instructionsModal.close();
   startNewGame();
-  hundredthsLeft = 1000;
+  hundredthsLeft = 2000;
   clearInterval(countdownInterval);
   countdownInterval = setInterval(() => {
     hundredthsLeft--;
@@ -178,18 +196,49 @@ startGameButton.addEventListener("click", () => {
         playMusic("music/game-over.mp3"); // ✅ your loss sound here
         lostModal.showModal();
       }, 500);
+      cleanupGameListeners();
+
     }
   }, 10);
+   handleMouseMove = (e) => {
+    mouse.x = e.x;
+    mouse.y = e.y;
+  };
+  
+   handleClick = () => {
+    balls.forEach((ball, index) => {
+      if (getDistance(ball.x, ball.y, mouse.x, mouse.y) < ball.radius + CLICK_RADIUS) {
+        const sounds = ["badnik", "collapse", "jump", "spring", "tally"];
+        const sfx = sounds[Math.floor(Math.random() * sounds.length)];
+        new Audio(`music/${sfx}.mp3`).play();
+  
+        balls.splice(index, 1);
+        createExplosion(mouse.x, mouse.y);
+  
+        if (balls.length === 0) {
+          clearInterval(countdownInterval);
+          playMusic("music/finished.mp3");
+          setTimeout(() => winModal.showModal(), 3000);
+          createExplosion(canvas.width / 2, canvas.height / 2, 10000);
+          cleanupGameListeners();
 
+        }
+      }
+    });
+  };
+  
+  // Attach only now
+  window.addEventListener("mousemove", handleMouseMove);
+  window.addEventListener("click", handleClick);
   animationActive = true;
   animate();
 });
 
 // Track mouse position
-window.addEventListener("mousemove", (e) => {
-  mouse.x = e.x;
-  mouse.y = e.y;
-});
+// window.addEventListener("mousemove", (e) => {
+//   mouse.x = e.x;
+//   mouse.y = e.y;
+// });
 
 // Resize canvas and reset game
 window.addEventListener("resize", () => {
@@ -199,28 +248,28 @@ window.addEventListener("resize", () => {
 });
 
 // Canvas click: check if user clicked on a ball
-window.addEventListener("click", () => {
-  balls.forEach((ball, index) => {
-    if (getDistance(ball.x, ball.y, mouse.x, mouse.y) < ball.radius + CLICK_RADIUS) {
-      // Play random SFX
-      const sounds = ["badnik", "collapse", "jump", "spring", "tally"];
-      const sfx = sounds[Math.floor(Math.random() * sounds.length)];
-      new Audio(`music/${sfx}.mp3`).play();
+// window.addEventListener("click", () => {
+//   balls.forEach((ball, index) => {
+//     if (getDistance(ball.x, ball.y, mouse.x, mouse.y) < ball.radius + CLICK_RADIUS) {
+//       // Play random SFX
+//       const sounds = ["badnik", "collapse", "jump", "spring", "tally"];
+//       const sfx = sounds[Math.floor(Math.random() * sounds.length)];
+//       new Audio(`music/${sfx}.mp3`).play();
 
-      // Remove ball and explode
-      balls.splice(index, 1);
-      createExplosion(mouse.x, mouse.y);
+//       // Remove ball and explode
+//       balls.splice(index, 1);
+//       createExplosion(mouse.x, mouse.y);
 
-      // Win condition
-      if (balls.length === 0) {
-        clearInterval(countdownInterval);
-        playMusic("music/finished.mp3");
-        setTimeout(() => winModal.showModal(), 3000);
-        createExplosion(canvas.width / 2, canvas.height / 2, 10000);
-      }
-    }
-  });
-});
+//       // Win condition
+//       if (balls.length === 0) {
+//         clearInterval(countdownInterval);
+//         playMusic("music/finished.mp3");
+//         setTimeout(() => winModal.showModal(), 3000);
+//         createExplosion(canvas.width / 2, canvas.height / 2, 10000);
+//       }
+//     }
+//   });
+// });
 
 // Restart game when clicking win modal
 winModal.addEventListener("click", () => {
