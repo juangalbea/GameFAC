@@ -164,9 +164,11 @@ function animate() {
   // ✅ Draw mouse scope circle
   if (mouse.x !== undefined && mouse.y !== undefined) {
     ctx.strokeStyle = "#00ff88";
-    ctx.lineWidth = 2;
+    ctx.lineWidth = cursorLineWidth;
     ctx.beginPath();
-    ctx.arc(mouse.x, mouse.y, CLICK_RADIUS, 0, Math.PI * 2);
+    ctx.arc(mouse.x, mouse.y, 20, 0, Math.PI * 2); // fixed radius
+    
+
     ctx.stroke();
   }
 }
@@ -200,10 +202,34 @@ startGameButton.addEventListener("click", () => {
 
     }
   }, 10);
-   handleMouseMove = (e) => {
+
+  
+  
+  const MIN_LINE_WIDTH = 2;
+  const MAX_LINE_WIDTH = 10;
+  const PROXIMITY_THRESHOLD = 150;
+  
+  handleMouseMove = (e) => {
     mouse.x = e.x;
     mouse.y = e.y;
+  
+    let closestDistance = Infinity;
+  
+    balls.forEach((ball) => {
+      const dist = getDistance(ball.x, ball.y, mouse.x, mouse.y);
+      if (dist < closestDistance) {
+        closestDistance = dist;
+      }
+    });
+  
+    if (closestDistance < PROXIMITY_THRESHOLD) {
+      const ratio = 1 - (closestDistance / PROXIMITY_THRESHOLD);
+      cursorLineWidth = MIN_LINE_WIDTH + (MAX_LINE_WIDTH - MIN_LINE_WIDTH) * ratio;
+    } else {
+      cursorLineWidth = MIN_LINE_WIDTH;
+    }
   };
+
   
    handleClick = () => {
     balls.forEach((ball, index) => {
