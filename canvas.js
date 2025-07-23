@@ -21,6 +21,8 @@ const ctx = canvas.getContext("2d");
 let animationActive = true;
 let balls = [];
 let particles = [];
+let hueOffset = 0; // 0 to 360
+
 
 const mouse = { x: undefined, y: undefined };
 const CLICK_RADIUS = 20;
@@ -163,16 +165,56 @@ function animate() {
 
   // ✅ Draw mouse scope circle
   if (mouse.x !== undefined && mouse.y !== undefined) {
+    // === Moved proximity logic here ===
+    let closestDistance = Infinity;
+    balls.forEach((ball) => {
+      const dist = getDistance(ball.x, ball.y, mouse.x, mouse.y);
+      if (dist < closestDistance) {
+        closestDistance = dist;
+      }
+    });
+
+    const MIN_LINE_WIDTH = 2;
+    const MAX_LINE_WIDTH = 20;
+    const PROXIMITY_THRESHOLD = 150;
+
+    if (closestDistance < PROXIMITY_THRESHOLD) {
+      const ratio = 1 - closestDistance / PROXIMITY_THRESHOLD;
+      cursorLineWidth = MIN_LINE_WIDTH + (MAX_LINE_WIDTH - MIN_LINE_WIDTH) * ratio;
+      hueOffset = (hueOffset + 2 + ratio * 10) % 360;
+    } else {
+      cursorLineWidth = MIN_LINE_WIDTH;
+      hueOffset = (hueOffset + 8) % 360; // 🔥 fast default speed
+    }
+
     ctx.strokeStyle = "#00ff88";
     ctx.lineWidth = cursorLineWidth;
     ctx.beginPath();
-    ctx.arc(mouse.x, mouse.y, 20, 0, Math.PI * 2); // fixed radius
-    
-
+    ctx.arc(mouse.x, mouse.y, 20, 0, Math.PI * 2);
+    drawRainbowRing(mouse.x, mouse.y, 20, cursorLineWidth);
     ctx.stroke();
+  } else {
+    hueOffset = (hueOffset + 8) % 360; // 🔥 Still animate fast when mouse not present
   }
 }
 
+
+function drawRainbowRing(x, y, radius, lineWidth, segments = 60) {
+  const angleStep = (Math.PI * 2) / segments;
+
+  for (let i = 0; i < segments; i++) {
+    const startAngle = i * angleStep;
+    const endAngle = startAngle + angleStep;
+    const hue = (hueOffset + (i * 360) / segments) % 360;
+
+    ctx.beginPath();
+    ctx.arc(x, y, radius, startAngle, endAngle);
+    ctx.strokeStyle = `hsl(${hue}, 100%, 50%)`;
+    ctx.lineWidth = lineWidth;
+    ctx.stroke();
+    ctx.closePath();
+  }
+}
 
 
 // ==============================
@@ -206,28 +248,12 @@ startGameButton.addEventListener("click", () => {
   
   
   const MIN_LINE_WIDTH = 2;
-  const MAX_LINE_WIDTH = 10;
+  const MAX_LINE_WIDTH = 20;
   const PROXIMITY_THRESHOLD = 150;
   
   handleMouseMove = (e) => {
     mouse.x = e.x;
     mouse.y = e.y;
-  
-    let closestDistance = Infinity;
-  
-    balls.forEach((ball) => {
-      const dist = getDistance(ball.x, ball.y, mouse.x, mouse.y);
-      if (dist < closestDistance) {
-        closestDistance = dist;
-      }
-    });
-  
-    if (closestDistance < PROXIMITY_THRESHOLD) {
-      const ratio = 1 - (closestDistance / PROXIMITY_THRESHOLD);
-      cursorLineWidth = MIN_LINE_WIDTH + (MAX_LINE_WIDTH - MIN_LINE_WIDTH) * ratio;
-    } else {
-      cursorLineWidth = MIN_LINE_WIDTH;
-    }
   };
 
   
